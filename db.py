@@ -14,37 +14,38 @@ def gendb(name='db.db'):
     getcon(name).close()
 
 def addtable(db_name, table_name, *cols):
-    cols_str = ", ".join(cols)
+    base_cols = ["ID INTEGER PRIMARY KEY AUTOINCREMENT", "name TEXT", "created_at TEXT"]
+    cols_str = ", ".join(base_cols + list(cols))
+
     con, cur = getcur(db_name)
-    cur.execute(f"CREATE TABLE IF NOT EXISTS {table_name}({cols_str})")
+    cur.execute(f"CREATE TABLE IF NOT EXISTS {table_name} ({cols_str})")
     con.commit()
     con.close()
 
-def inserttotable(db_name, table_name, values_list):
+def inserttotable(db_name, table_name, values_list, cols=None):
     con, cur = getcur(db_name)
-    cur.execute(f"PRAGMA table_info({table_name})")
-    cols = [row[1] for row in cur.fetchall()]  # row[1] is column table_name
+
+    if cols is None:
+        cur.execute(f"PRAGMA table_info({table_name})")
+        cols = [row[1] for row in cur.fetchall()]
 
     # Ensure values are a list of tuples
     if isinstance(values_list[0], (str, int, float)):
-        values_list = [tuple(values_list)]  # single row
+        values_list = [tuple(values_list)]
 
-         # Check that each row matches column count
     for row in values_list:
         if len(row) != len(cols):
             raise ValueError(f"Expected {len(cols)} values, got {len(row)}")
 
-    # Use executemany for efficiency
     placeholders = ", ".join(["?"] * len(cols))
-    sql = f"INSERT INTO {table_name} VALUES ({placeholders})"
+    cols_str = ", ".join(cols)
+    sql = f"INSERT INTO {table_name} ({cols_str}) VALUES ({placeholders})"
     cur.executemany(sql, values_list)
     con.commit()
     con.close()
 
 def getfromdb(db_name, table_name, value_name, value):
     con, cur = getcur(db_name)
-    cur.execute(f"PRAGMA table_info({table_name})")
-    cols = [row[1] for row in cur.fetchall()]  # row[1] is column table_name
     sql = f"SELECT ID FROM {table_name} WHERE {value_name} = ?"
     cur.execute(sql, (value,))
     result = cur.fetchall()
