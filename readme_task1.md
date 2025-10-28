@@ -1,34 +1,81 @@
-Project 1 – Clustering cross-border workers
-Objective:
-Create homogeneous travel groups.
-Goal:
-Build a geo-localized clustering system for employees, with interactive map
-visualization.
-Description:
-We will first collect key information from cross-border workers, including:
-•Home location
-•Workplace location
-•Usual required arrival time at work
-•Typical departure time from work to home
+🚗 Clustering Cross-Border Workers
 
-Using this data, the system will identify clusters of workers who can be grouped together
-for shared rides. These groups should be as homogeneous as possible to minimize
-detours, delays, and scheduling conflicts.
-The system should also be flexible and dynamic:
-If a person declares they will be late (e.g., sleeping in, shift change), the algorithm
-should reassign them to a different group or route in real time, without disrupting the rest
-of the cluster.
-Key Parameters:
-Departure time, origin & destination points.
-Ideas:
-Unsupervised machine learning.
-Tools & Resources:
-DBScan (Density-Based Spatial Clustering of Applications with Noise)
+Objective: Create homogeneous travel groups for employees to optimize shared commuting.
 
-=================
+Goal: Build a geo-localized clustering system with an interactive map visualization that dynamically adapts to changes in schedules or delays.
 
-Need to go step by step
+📝 Project Description
 
-1. Create fitting travel groups
-I get users, who live in random places, work at random times. I need to put similar workers together.
-Easiest way: Find identical workers, put them into the same car.
+This project focuses on grouping cross-border workers into shared rides while minimizing detours, delays, and scheduling conflicts.
+
+Step 1: Collect Key Worker Information
+
+For each participant, we gather:
+
+Home location
+
+Workplace location
+
+Typical arrival time at work
+
+Typical departure time from work to home
+
+Step 2: Build Homogeneous Travel Groups
+
+Using the collected data, the system identifies clusters of workers who can share rides.
+
+Workers with similar routes and schedules are grouped together.
+
+The system ensures clusters are as homogeneous as possible to reduce travel inefficiency.
+
+Step 3: Dynamic Reassignment
+
+If a worker reports a delay (sleeping in, shift change), the algorithm reassigns them to a different group or route.
+
+This is done in real-time without disrupting the rest of the cluster.
+
+⚙️ Key Parameters
+
+Departure time
+
+Origin & destination points
+
+Optional flexibility constraints (max detour, max delay tolerance)
+
+💡 Implementation Ideas
+
+Step 1: Find identical or similar workers (same route and schedule) and assign them to the same car.
+
+Step 2: Apply unsupervised machine learning (clustering) to form optimal groups.
+
+Step 3: Incorporate real-time adjustments for late arrivals or schedule changes.
+
+🛠 Tools & Resources
+
+Python for data processing and algorithm implementation
+
+DBSCAN (Density-Based Spatial Clustering of Applications with Noise) for route clustering
+
+Interactive map libraries: Folium, Plotly, or Leaflet for visualization
+
+SQLite/PostgreSQL for storing worker data
+
+📈 Workflow Example
+
+Collect worker data: locations and schedules.
+
+Compute clusters of workers with similar home-to-work routes and times.
+
+Assign clusters to cars, minimizing detours and conflicts.
+
+Update clusters dynamically if workers report schedule changes.
+
+🚀 Next Steps
+
+Implement DBSCAN or another clustering algorithm for initial grouping.
+
+Develop real-time reassignment logic for dynamic updates.
+
+Build an interactive map interface to visualize clusters and routes.
+
+Integrate user interface to allow workers to input delays or schedule changes.
