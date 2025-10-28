@@ -44,10 +44,10 @@ def inserttotable(db_name, table_name, values_list, cols=None):
     con.commit()
     con.close()
 
-def getfromdb(db_name, table_name, value_name, value):
+def getfromdb(db_name, table_name, place, place_value, time, time_value):
     con, cur = getcur(db_name)
-    sql = f"SELECT ID FROM {table_name} WHERE {value_name} = ?"
-    cur.execute(sql, (value,))
+    sql = f"SELECT ID FROM {table_name} WHERE {place} = ? AND {time} = ?"
+    cur.execute(sql, (place_value, time_value))
     result = cur.fetchall()
     con.close()
     return result
