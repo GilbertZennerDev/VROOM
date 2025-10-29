@@ -65,8 +65,44 @@ def get_slot_id(id, allcars):
     car = allcars[time_id]
     for i, slot in enumerate(car, start=1):
         if id in slot:
-            return slot.split('-')[1], time_id
+            return (int(slot.split('-')[1]) + 1), time_id
     return -1
+
+def remove_id(id, allcars):
+    id = str(id)
+    slot_id, time_id = get_slot_id(id, allcars)
+    oldstr = allcars[int(time_id)][slot_id]
+    car_limit = oldstr.split(';')[1]
+    oldstr = oldstr.split(';')[0].split('.')
+    oldstr.pop(oldstr.index(str(id)))
+    allcars[int(time_id)][slot_id] = ".".join(oldstr) + f';{car_limit}'
+    return allcars
+
+def get_time_id_add_id(id, allcars, new_arrival):
+    new_arrival = str(new_arrival)
+    for i, time_slot in enumerate(allcars):
+        if time_slot[0][1] == new_arrival:
+            return i
+    return -1
+
+def find_spot(allcars, time_id):
+    car = allcars[time_id]
+    print(car)
+    for i, slot in enumerate(car):
+        if i == 0 or slot == 'no_people': continue
+        carried_amount = len(slot.split(';')[0].split('.'))
+        carry_limit = int(slot.split(';')[1][0])
+        print('carried_amount', carried_amount, 'carry_limit', carry_limit)
+        if carried_amount < carry_limit:
+            print("Found free spot:", slot)
+
+def add_id(id, allcars, new_arrival):
+    #removing the id is done. Now I need to add it on a slot inside the right time_slot
+    #I need to find get the cars on the right timeslot and then find a slot with space left
+    #otherwise append at the last one.
+    time_id = get_time_id_add_id(id, allcars, new_arrival);
+    find_spot(allcars, time_id)
+    print(time_id)
 
 def dynamic_shift(id, allcars, old_arrival, new_arrival):
     # I just need to remove the id from the old idstr, put it into a new one and update cars
@@ -79,23 +115,11 @@ def dynamic_shift(id, allcars, old_arrival, new_arrival):
     5. Insert id where space
     6. Update the new car
     '''
-    id = str(id)
-    slot_id, time_id = get_slot_id(id, allcars)
-    print('slot', slot_id, 'time', time_id)
-    oldstr = allcars[int(time_id)][int(slot_id) + 1]
-    print(oldstr)
-    car_limit = oldstr.split(';')[1]
-    print('car_limit:', car_limit)
-    oldstr = oldstr.split(';')[0]
-    print(oldstr)
-    oldstr = oldstr.split('.')
-    print(oldstr)
-    print(id)
-    oldstr.pop(oldstr.index(str(id)))
-    print(".".join(oldstr))
-    allcars[int(time_id)][int(slot_id) + 1] = oldstr
-    print(allcars)
-    pass
+    #allcars = remove_id(id, allcars)
+    #print(allcars)
+    add_id(0, allcars, 8)
+    add_id(0, allcars, 9)
+    add_id(0, allcars, 10)
 
 gendb(DBNAME)
 addtable(DBNAME, PEOPLE_TABLE, 'home', 'work', 'arrival', 'departure')
